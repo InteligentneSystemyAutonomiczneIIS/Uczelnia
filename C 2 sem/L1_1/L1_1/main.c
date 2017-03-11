@@ -1,7 +1,7 @@
 #include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
-#include <Windows.h>
+#include <stdlib.h>		
+#include <time.h>		//seed
+#include <Windows.h>	//kolory
 
 //------------------- PARAMETRY DO EDYCJI ---------------------
 
@@ -27,11 +27,13 @@ int main() {
 	int tab[M*N];
 	int mem;
 
-	
+
+	//------------------ TEST KOLORÓW
 	//for (int i = 0; i < 50; i++) {
 	//	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), i);
 	//	printf("##############    %d\n",i);
 	//}
+
 
 	//------------FUNKCJE
 	random(tab);
@@ -54,18 +56,21 @@ int main() {
 
 
 //===============================CIA£A FUNKCJI
+
+//---------------------WYŒWIETL
 void wyswietl(int tab[]){
 	for (int i = 0; i < M*N; i++)
 		printf((i + 1) % N == 0 ? "%d\n" : "%d ", tab[i]);
 	printf("\n");
 }
 
+//---------------------RANDOM
 void random(int tab[]){
 	for (int i = 0; i < M*N; i++)
 		tab[i] = rand() % (MAX-MIN+1)+MIN;
 }
 
-
+//---------------------OBLICZ
 int oblicz(int tab[]){
 	int memory = 0;
 	for (int i = 1; i <= M; i++)
@@ -75,6 +80,7 @@ int oblicz(int tab[]){
 	return memory;
 }
 
+//---------------------WYŒWIETL2 - KOLORY
 void wyswietl2(int tab[]) {
 	for (int i = 1; i <= M; i++)
 		for (int j = 1; j <= N; j++) {
