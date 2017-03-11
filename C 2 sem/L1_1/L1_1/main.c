@@ -5,8 +5,8 @@
 
 //------------------- PARAMETRY DO EDYCJI ---------------------
 
-#define M 5 //wysokoœæ tablicy
-#define N 5 //szerokoœæ tablicy
+#define M 15 //wysokoœæ tablicy
+#define N 20 //szerokoœæ tablicy
 #define MIN 1 //wartoœæ minimalna losowanych liczb
 #define MAX 9 //wartoœæ maksymalna losowanych liczb
 #define X 2 //pozycja x liczby
@@ -85,9 +85,9 @@ void wyswietl2(int tab[]) {
 	for (int i = 1; i <= M; i++)
 		for (int j = 1; j <= N; j++) {
 			if (j - i == X - Y || j + i == X + Y)
-				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 9);
-			else
 				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 14);
+			else
+				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 9);
 			printf(((i - 1)*N + (j - 1) + 1) % N == 0 ? "%d\n" : "%d ", tab[(i - 1)*N + (j - 1)]);
 		}
 	printf("\n");
