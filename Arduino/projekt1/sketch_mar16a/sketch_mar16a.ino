@@ -1,7 +1,9 @@
 #include <ISALedControl.h>
 #include "Buttons.h"
 #include "ISA7SegmentDisplay.h"
-
+#include <LiquidCrystal.h>
+#include <DueTimer.h>
+LiquidCrystal lcd(26, 28, 29, 30, 31, 32);
 ISA7SegmentDisplay wysw;
 //////////////////////////////////////////////////USTAWIENIA
 ISALedControl matryca;
@@ -45,15 +47,17 @@ void setup() {
 }
 //////////////////////////////////////// GRA GRA GRA GRA GRA
 void loop() {
-  input();
+  if(licznik_czasu%4==0)
+    input();
   
   if(licznik_czasu%75==0){
-    delay(10);
+    //delay(20);
     licznik_czasu=0;
     matryca.clearDisplay();
     wysw.displayDigit(wynik,0);
     //matryca.setLed(8-y,x-1,true);   
     logic(); 
+    dlugiOgon();
     owoc();  
     ogon();
     
@@ -98,18 +102,18 @@ void logic(){//////////////////// RUCH GŁOWY
   default:
     break;
   }
-  oX[0]=x;
-  oY[0]=y;
+
 }
 
 void owoc(){//////////////////////////// DZIAŁANIE JEDZENIA
   if(owocX==x&&owocY==y){
     wynik++;
-    dlugiOgon();
+    
     
     owocX = random(szer)+1;
     owocY = random(wys)+1;
   }
+  
   matryca.setLed(8-owocY,owocX-1,true);
 }
 
@@ -120,7 +124,7 @@ void ogon(){//////////////////////////// DZIAŁANIE OGONA? ALBO OGONU? NIE WIEM.
 }
 
 void dlugiOgon(){
-    for(int i=wynik;i>=0;i--){
+    for(int i=wynik;i>0;i--){
     oX[i]=oX[i-1];
     oY[i]=oY[i-1];
 
