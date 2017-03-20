@@ -31,6 +31,9 @@ int fY[100];
 enum direct {STOP = 0, LEFT, RIGHT, UP, DOWN};
 direct dir;
 
+bool dark = true;
+
+
 //*********************************************************   SETUP
 void setup() {
   randomSeed(analogRead(0));
@@ -48,9 +51,7 @@ void setup() {
   matrix.setLed(8 - y, x - 1, true);
 
   //*********************************************************   TEKST ROZPOCZYNAJĄCY
-  lcd.print("Rozpocznij gre");
-  lcd.setCursor(0, 1);
-  lcd.print("Wcisnij przycisk");
+  txt(1);
 
   //*********************************************************   GRAAAAAAAA
   
@@ -58,43 +59,43 @@ void setup() {
   Timer5.start(5);
   Timer4.attachInterrupt(movment);
   sSpeed();
-  
+  fruit();
 
-  //*********************************************************   TEKST KOŃCZĄCY
-  if (gameOver) {
-    lcd.setCursor(0, 0);
-    lcd.print("Przegrales stary");
-    lcd.setCursor(0, 1);
-    lcd.print("Wcisnij reset");
-  }
+  //*********************************************************   TEKST KOŃCZĄCY dodać do funkcji odpowiadającej za logikę (kolizję i śmierć)
+  if(gameOver);
+    txt(2);
 }
 //*********************************************************   LOOP
-void loop() { }
+void loop() {
+    
+}
 
 //*********************************************************   FUNKCJE
 
 //*********************************************************   INPUT - PRZYCISKI
 void input() {
-  if (button.buttonPressed(1) && dir != DOWN) {
+  if ((button.buttonPressed(1) || analogRead(A10) > 900 )&& dir != DOWN) {
     dir = UP; Timer5.stop();
   }
-  if (button.buttonPressed(7) && dir != RIGHT) {
+  if ((button.buttonPressed(7) || analogRead(A11) < 100 )&& dir != RIGHT) {
     dir = LEFT; Timer5.stop();
   }
-  if (button.buttonPressed(5) && dir != LEFT) {
+  if ((button.buttonPressed(5) || analogRead(A11) > 900) && dir != LEFT) {
     dir = RIGHT; Timer5.stop();
   }
-  if (button.buttonPressed(6) && dir != UP) {
+  if ((button.buttonPressed(6) || analogRead(A10) < 100 )&& dir != UP) {
     dir = DOWN; Timer5.stop();
   }
   if (button.buttonPressed(0)) {
     dir = STOP; Timer5.stop();
   }
+
 }
 
 //*********************************************************   RUCH GŁOWY
 void movment() {
   matrix.clearDisplay();
+
   switch (dir)
   {
     case LEFT:
@@ -117,8 +118,16 @@ void movment() {
       break;
   }
   matrix.setLed(8 - y, x - 1, true);
+
+  tail();
   Timer5.start(5);
   sSpeed();
+  fruit();
+
+  if(dir!=STOP)
+    txt(3);
+  else
+    txt(4);
 }
 
 //*********************************************************   PRĘDKOŚĆ GRY
@@ -135,5 +144,76 @@ void sSpeed() {
   
 
   Timer4.start((8-value) * 100000);
+}
+
+//********************************************************* GENEROWANIE OWOCA
+void fruit(){
+  dark = !dark;
+  if(fruitX==x&&fruitY==y){
+    score++;
+        //////////////////////////////////dodać tutaj do-while X/y fruit będzie rózne od ogona
+    do{
+    fruitX = random(width)+1;
+    fruitY = random(height)+1;
+    }while(fruitCollision());
+  }
+  matrix.setLed(8 - fruitY, fruitX - 1, dark);
+}
+
+//********************************************************* TWORZENIE OGONU
+void tail(){
+  for(int i=score;i>0;i--){
+    fX[i]=fX[i-1];
+    fY[i]=fY[i-1];
+  }
+  
+  fX[0]=x;
+  fY[0]=y;
+  for(int i=0;i<=score+1;i++){
+    matrix.setLed(8-fY[i],fX[i]-1,true);
+  }
+}
+
+//********************************************************* KOLIZJA OGONU
+void collision(){
+  
+}
+
+//********************************************************* KOLIZJA OWOCU
+bool fruitCollision(){
+  for(int i=1;i<score+1;i++)
+    if(fX[i]==x&&fY[i]==y)return true;
+  return false;  
+}
+
+//********************************************************* TEKSTY NA WYŚWIETLACZU 16x2
+void txt(int tx){
+  switch(tx)
+  {
+    case 1:
+      lcd.setCursor(0, 0);
+      lcd.print("Rozpocznij gre");
+      lcd.setCursor(0, 1);
+      lcd.print("Wcisnij przycisk");
+      break;
+    case 2:
+      lcd.setCursor(0, 0);
+      lcd.print("Przegrales stary");
+      lcd.setCursor(0, 1);
+      lcd.print("Wcisnij reset");
+      break;
+    case 3:
+      lcd.clear();
+      break;
+    case 4:
+      lcd.setCursor(0, 0);
+      lcd.print("Kontynuuj gre");
+      lcd.setCursor(0, 1);
+      lcd.print("Wcisnij przycisk");
+      break;
+    default:
+      lcd.clear();
+      break;  
+  }
 }
 
