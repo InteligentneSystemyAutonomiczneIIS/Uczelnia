@@ -58,8 +58,6 @@ void setup() {
   Timer5.start(5);
   Timer4.attachInterrupt(movment);
   sSpeed();
-  //Timer6.attachInterrupt(sSpeed);
-  //Timer6.start(3000000);
   
 
   //*********************************************************   TEKST KOŃCZĄCY
@@ -75,6 +73,7 @@ void loop() { }
 
 //*********************************************************   FUNKCJE
 
+//*********************************************************   INPUT - PRZYCISKI
 void input() {
   if (button.buttonPressed(1) && dir != DOWN) {
     dir = UP; Timer5.stop();
@@ -89,10 +88,11 @@ void input() {
     dir = DOWN; Timer5.stop();
   }
   if (button.buttonPressed(0)) {
-    dir = STOP; Timer5.stop();/*Timer4.stop();*/
+    dir = STOP; Timer5.stop();
   }
 }
 
+//*********************************************************   RUCH GŁOWY
 void movment() {
   matrix.clearDisplay();
   switch (dir)
@@ -121,7 +121,8 @@ void movment() {
   sSpeed();
 }
 
-void sSpeed() { //500000
+//*********************************************************   PRĘDKOŚĆ GRY
+void sSpeed() {
   int value = analogRead(A9) / 128;
   //value++;
   Timer4.stop();
