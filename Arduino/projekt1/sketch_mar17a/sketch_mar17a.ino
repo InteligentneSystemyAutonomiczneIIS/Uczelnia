@@ -40,6 +40,7 @@ void setup() {
   matrix.init();
   button.init();
   lcd.begin(16, 2);
+  pinMode(24, OUTPUT);
   for (int i = 2; i < 10; i++)
     pinMode(i, OUTPUT);
 
@@ -62,8 +63,7 @@ void setup() {
   fruit();
 
   //*********************************************************   TEKST KOŃCZĄCY dodać do funkcji odpowiadającej za logikę (kolizję i śmierć)
-  if(gameOver);
-    txt(2);
+
 }
 //*********************************************************   LOOP
 void loop() {
@@ -89,13 +89,16 @@ void input() {
   if (button.buttonPressed(0)) {
     dir = STOP; Timer5.stop();
   }
-
+  digitalWrite(24, LOW);
 }
 
 //*********************************************************   RUCH GŁOWY
 void movment() {
   matrix.clearDisplay();
 
+  
+
+  
   switch (dir)
   {
     case LEFT:
@@ -128,6 +131,8 @@ void movment() {
     txt(3);
   else
     txt(4);
+    
+    collision();
 }
 
 //*********************************************************   PRĘDKOŚĆ GRY
@@ -151,6 +156,7 @@ void fruit(){
   dark = !dark;
   if(fruitX==x&&fruitY==y){
     score++;
+    digitalWrite(24, HIGH);
         //////////////////////////////////dodać tutaj do-while X/y fruit będzie rózne od ogona
     do{
     fruitX = random(width)+1;
@@ -158,6 +164,8 @@ void fruit(){
     }while(fruitCollision());
   }
   matrix.setLed(8 - fruitY, fruitX - 1, dark);
+  
+  
 }
 
 //********************************************************* TWORZENIE OGONU
@@ -176,18 +184,34 @@ void tail(){
 
 //********************************************************* KOLIZJA OGONU
 void collision(){
+    for(int i=1;i<score+1;i++)
+      if(fX[i]==x&&fY[i]==y)gameOver=true;
   
+//    for(int i=0;i<score+1;i++){
+//      lcd.setCursor(i, 0);
+//      lcd.print(fX[i]);
+//      lcd.setCursor(i, 1);
+//      lcd.print(fY[i]);
+//    }
+     
+    if(gameOver==true){
+      txt(2);
+      Timer5.stop();
+      Timer4.stop();
+  }
 }
 
-//********************************************************* KOLIZJA OWOCU
+//********************************************************* KOLIZJA OWOCU  ==================================== NIE DZIAŁA!!!!!!!!!!!!!!!!!
+
 bool fruitCollision(){
   for(int i=1;i<score+1;i++)
-    if(fX[i]==x&&fY[i]==y)return true;
+    if(fX[i]==fruitX&&fY[i]==fruitY)return true;
   return false;  
 }
 
 //********************************************************* TEKSTY NA WYŚWIETLACZU 16x2
 void txt(int tx){
+  lcd.clear();
   switch(tx)
   {
     case 1:
