@@ -17,10 +17,12 @@
 #include "Buttons.h"
 #include <LiquidCrystal.h>
 #include <DueTimer.h>
+#include <ISA7SegmentDisplay.h>
 //*********************************************************   ZMIENNE GLOBALNE
 ISALedControl matrix;
 Buttons button;
 LiquidCrystal lcd(26, 28, 29, 30, 31, 32);
+ISA7SegmentDisplay seg;
 //int timer=0;
 bool gameOver = false;
 int score = 0;
@@ -39,6 +41,7 @@ void setup() {
   randomSeed(analogRead(0));
   matrix.init();
   button.init();
+  seg.init();
   lcd.begin(16, 2);
   pinMode(24, OUTPUT);
   for (int i = 2; i < 10; i++)
@@ -156,6 +159,7 @@ void fruit(){
   dark = !dark;
   if(fruitX==x&&fruitY==y){
     score++;
+    points(score);
     digitalWrite(24, HIGH);
         //////////////////////////////////dodać tutaj do-while X/y fruit będzie rózne od ogona
     do{
@@ -186,14 +190,7 @@ void tail(){
 void collision(){
     for(int i=1;i<score+1;i++)
       if(fX[i]==x&&fY[i]==y)gameOver=true;
-  
-//    for(int i=0;i<score+1;i++){
-//      lcd.setCursor(i, 0);
-//      lcd.print(fX[i]);
-//      lcd.setCursor(i, 1);
-//      lcd.print(fY[i]);
-//    }
-     
+
     if(gameOver==true){
       txt(2);
       Timer5.stop();
@@ -239,5 +236,11 @@ void txt(int tx){
       lcd.clear();
       break;  
   }
+}
+
+//********************************************************* WYŚWIETLANIE PUNKTÓW
+void points(int score){
+  seg.displayDigit(score%10,0);
+  seg.displayDigit(score/10,1);
 }
 
