@@ -1,6 +1,6 @@
 #include <SPI.h>
 #include "SH1106_SPI.h"
-#include "obraz.h"
+#include "obraz2.h"
 
 SH1106_SPI_FB lcd;
 
