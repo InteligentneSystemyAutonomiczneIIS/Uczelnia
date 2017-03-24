@@ -243,3 +243,4 @@ void points(int score){
   seg.displayDigit(score%10,0);
   seg.displayDigit(score/10,1);
 }
+
