@@ -1,3 +1,3 @@
-# Uczelnia
+# Projekty studenckie
 
-Tutaj znajdziesz wszystkie moje projekty wykonane na zajêciach na uczelni
+Projekty przygotowane przez Artura Mokrosinskiego (https://github.com/Rootar)
